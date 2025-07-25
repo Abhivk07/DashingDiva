@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # Main scraper application
+  scraper:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: development
+    container_name: dashing-diva-scraper
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../exports:/app/exports
+      - ../config:/app/config
+    environment:
+      - PYTHONPATH=/app/src
+      - DATABASE_PATH=/app/data/reviews.db
+      - LOG_LEVEL=INFO
+    networks:
+      - scraper-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  # PostgreSQL for production-grade data storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: dashing-diva-postgres
+    environment:
+      - POSTGRES_DB=dashing_diva_reviews
+      - POSTGRES_USER=scraper_user
+      - POSTGRES_PASSWORD=secure_password_change_in_production
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - scraper-network
+    restart: unless-stopped
+
+  # Redis for caching and rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: dashing-diva-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - scraper-network
+    restart: unless-stopped
+
+  # Nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: dashing-diva-nginx
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ../logs:/var/log/nginx
+    networks:
+      - scraper-network
+    depends_on:
+      - scraper
+    restart: unless-stopped
+
+  # Prometheus for monitoring
+  prometheus:
+    image: prom/prometheus
+    container_name: dashing-diva-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - scraper-network
+    restart: unless-stopped
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana
+    container_name: dashing-diva-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin_change_in_production
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - scraper-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  scraper-network:
+    driver: bridge

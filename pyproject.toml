@@ -1,0 +1,126 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dashing-diva-scraper"
+version = "1.0.0"
+description = "Production-ready web scraper for Dashing Diva customer reviews"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "DevOps & Data Engineering Candidate", email = "candidate@example.com"}
+]
+keywords = ["web-scraping", "reviews", "dagster", "data-engineering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: python3 :: 3",
+    "Programming Language :: python3 :: 3.11",
+    "Topic :: Software Development :: Libraries :: python3 Modules",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+requires-python3 = ">=3.11"
+dependencies = [
+    "requests>=2.31.0",
+    "aiohttp>=3.8.5",
+    "beautifulsoup4>=4.12.2",
+    "lxml>=4.9.3",
+    "fake-useragent>=1.4.0",
+    "pandas>=2.1.1",
+    "numpy>=1.24.3",
+    "flask>=2.3.3",
+    "dagster>=1.4.14",
+    "dagster-webserver>=1.4.14",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.2",
+    "pytest-asyncio>=0.21.1",
+    "pytest-mock>=3.11.1",
+    "pytest-cov>=4.1.0",
+    "black>=23.7.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "isort>=5.12.0",
+]
+production = [
+    "gunicorn>=21.2.0",
+    "dagster-postgres>=0.20.14",
+    "dagster-aws>=0.20.14",
+]
+
+[project.urls]
+Homepage = "https://github.com/dashing-diva/review-scraper"
+Documentation = "https://github.com/dashing-diva/review-scraper/docs"
+Repository = "https://github.com/dashing-diva/review-scraper"
+Changelog = "https://github.com/dashing-diva/review-scraper/CHANGELOG.md"
+
+[project.scripts]
+dashing-diva-scraper = "main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+
+[tool.mypy]
+python3_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+python3_files = ["test_*.py"]
+python3_classes = ["Test*"]
+python3_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/test_*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

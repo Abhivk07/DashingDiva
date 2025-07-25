@@ -1,0 +1,31 @@
+{
+  "rate_limit": {
+    "max_requests": 10,
+    "time_window": 60
+  },
+  "database": {
+    "path": "data/reviews.db"
+  },
+  "scraping": {
+    "max_retries": 3,
+    "batch_size": 5,
+    "concurrent_limit": 3
+  },
+  "target_products": [
+    "https://www.walmart.com/ip/Dashing-Diva-One-Gel-Sheer-Topper-0-33oz/14551400056?classType=VARIANT",
+    "https://www.walmart.com/ip/Dashing-Diva-Glaze-Starter-Kit-with-Mini-LED-Lamp-Powder-Pink-32ct/134992967?classType=VARIANT",
+    "https://www.walmart.com/ip/Dashing-Diva-Glaze-Semi-Cured-Gel-Nail-Art-Cheerful-Cheetah-32ct/1308193723?classType=REGULAR",
+    "https://www.ulta.com/p/glaze-color-semi-cured-gel-nail-strips-pimprod2049341?sku=2632880",
+    "https://www.ulta.com/p/dance-floor-gloss-ultra-shine-gel-palette-pimprod2044947?sku=2621018",
+    "https://www.target.com/p/dashing-diva-one-gel-magic-off-nail-polish-remover-15ml/-/A-92173374#lnk=sametab",
+    "https://www.target.com/p/dashing-diva-mani-pedi-gloss-nail-art-white-flag/-/A-92173375#lnk=sametab"
+  ],
+  "flask": {
+    "SECRET_KEY": "change-this-in-production",
+    "DEBUG": false
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/scraper.log"
+  }
+}

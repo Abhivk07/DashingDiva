@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashing Diva Analytics Hub</title>
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Modern charting libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.2/dist/apexcharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/lucide@0.309.0/dist/umd/lucide.js" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.309.0/dist/umd/lucide.js"></script>
+    
+    <style>
+      :root {
+        /* Modern color palette */
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        
+        --bg-primary: #0f0f23;
+        --bg-secondary: #1a1a2e;
+        --bg-card: #16213e;
+        --bg-glass: rgba(255, 255, 255, 0.05);
+        
+        --text-primary: #ffffff;
+        --text-secondary: #b4bcd0;
+        --text-accent: #667eea;
+        
+        --border-color: rgba(255, 255, 255, 0.1);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.15);
+        --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.2);
+        
+        /* Typography */
+        --font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --font-weight-light: 300;
+        --font-weight-normal: 400;
+        --font-weight-medium: 500;
+        --font-weight-semibold: 600;
+        --font-weight-bold: 700;
+        
+        /* Spacing */
+        --spacing-xs: 0.5rem;
+        --spacing-sm: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+        
+        /* Border radius */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        overflow-x: hidden;
+        font-feature-settings: 'kern' 1, 'liga' 1;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Animated background */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      /* Header */
+      .header {
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-color);
+        padding: var(--spacing-lg) 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .logo {
+        width: 48px;
+        height: 48px;
+        background: var(--primary-gradient);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: var(--font-weight-bold);
+      }
+
+      .header h1 {
+        font-size: 1.75rem;
+        font-weight: var(--font-weight-semibold);
+        background: var(--primary-gradient);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        align-items: center;
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        font-size: 0.875rem;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success-gradient);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      /* Main container */
+      .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--spacing-xl) var(--spacing-lg);
+      }
+
+      /* Dashboard grid */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+      }
+
+      /* Card base styles */
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-lg);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--primary-gradient);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(102, 126, 234, 0.3);
+      }
+
+      .card:hover::before {
+        opacity: 1;
+      }
+
+      /* Stat cards */
+      .stat-card {
+        grid-column: span 3;
+        text-align: center;
+        position: relative;
+      }
+
+      .stat-card .icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto var(--spacing-sm);
+        background: var(--primary-gradient);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+
+      .stat-number {
+        font-size: 2.75rem;
+        font-weight: var(--font-weight-bold);
+        background: var(--primary-gradient);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: var(--spacing-xs);
+        line-height: 1.1;
+      }
+
+      .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: var(--font-weight-medium);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .stat-change {
+        position: absolute;
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
+        padding: 4px 8px;
+        border-radius: var(--radius-sm);
+        font-size: 0.75rem;
+        font-weight: var(--font-weight-medium);
+        background: var(--success-gradient);
+        color: white;
+      }
+
+      /* Chart cards */
+      .chart-card {
+        position: relative;
+      }
+
+      .chart-card.large {
+        grid-column: span 8;
+      }
+
+      .chart-card.medium {
+        grid-column: span 6;
+      }
+
+      .chart-card.small {
+        grid-column: span 4;
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .chart-title {
+        font-size: 1.25rem;
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
+      }
+
+      .chart-subtitle {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+
+      .chart-actions {
+        display: flex;
+        gap: var(--spacing-xs);
+      }
+
+      .chart-btn {
+        padding: 6px 12px;
+        border: 1px solid var(--border-color);
+        background: transparent;
+        color: var(--text-secondary);
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .chart-btn:hover,
+      .chart-btn.active {
+        background: var(--primary-gradient);
+        color: white;
+        border-color: transparent;
+      }
+
+      /* Chart containers */
+      .chart-container {
+        height: 300px;
+        position: relative;
+      }
+
+      .chart-container.tall {
+        height: 400px;
+      }
+
+      .chart-container.short {
+        height: 200px;
+      }
+
+      /* Filter Section */
+      .filter-section {
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        grid-column: span 12;
+      }
+
+      .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .filter-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .filter-input,
+      .filter-select {
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+      }
+
+      .filter-input:focus,
+      .filter-select:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+      }
+
+      .filter-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+      }
+
+      .filter-btn.primary {
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        color: white;
+      }
+
+      .filter-btn.secondary {
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+      }
+
+      .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Reviews Table */
+      .reviews-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      .reviews-table th,
+      .reviews-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .reviews-table th {
+        background: var(--bg-secondary);
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .reviews-table tbody tr {
+        transition: background-color 0.2s ease;
+      }
+
+      .reviews-table tbody tr:hover {
+        background: var(--bg-secondary);
+      }
+
+      .rating-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .rating-badge.excellent { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+      .rating-badge.good { background: rgba(132, 204, 22, 0.1); color: #84cc16; }
+      .rating-badge.average { background: rgba(234, 179, 8, 0.1); color: #eab308; }
+      .rating-badge.poor { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+      .retailer-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .retailer-badge.walmart { background: rgba(0, 113, 220, 0.1); color: #0071dc; }
+      .retailer-badge.target { background: rgba(204, 9, 47, 0.1); color: #cc092f; }
+      .retailer-badge.ulta { background: rgba(232, 119, 34, 0.1); color: #e87722; }
+
+      .review-text {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .pagination button {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-color);
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .pagination button:hover:not(:disabled) {
+        background: var(--accent-primary);
+        color: white;
+      }
+
+      .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .pagination .page-info {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      /* Reviews section */
+      .reviews-section {
+        grid-column: span 12;
+      }
+
+      .reviews-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: var(--spacing-md);
+      }
+
+      .review-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+        transition: all 0.3s ease;
+      }
+
+      .review-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .review-product {
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
+        font-size: 0.9rem;
+      }
+
+      .review-rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #fbbf24;
+        font-weight: var(--font-weight-medium);
+        font-size: 0.875rem;
+      }
+
+      .review-text {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin-bottom: var(--spacing-sm);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .review-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      .retailer-badge {
+        padding: 4px 8px;
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: var(--radius-sm);
+        font-weight: var(--font-weight-medium);
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: var(--font-family);
+        font-size: 0.875rem;
+        font-weight: var(--font-weight-medium);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        text-decoration: none;
+      }
+
+      .btn-primary {
+        background: var(--primary-gradient);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--primary-gradient);
+        color: white;
+        border-color: transparent;
+      }
+
+      /* Loading states */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-lg);
+        color: var(--text-secondary);
+      }
+
+      .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-color);
+        border-top: 2px solid var(--text-accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Error states */
+      .error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-lg);
+        display: none;
+      }
+
+      /* Responsive design */
+      @media (max-width: 1200px) {
+        .stat-card { grid-column: span 6; }
+        .chart-card.large { grid-column: span 12; }
+        .chart-card.medium { grid-column: span 12; }
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: var(--spacing-sm);
+        }
+        
+        .stat-card { grid-column: span 12; }
+        .chart-card { grid-column: span 12; }
+        
+        .main-container {
+          padding: var(--spacing-lg) var(--spacing-sm);
+        }
+        
+        .dashboard-grid {
+          gap: var(--spacing-sm);
+        }
+      }
+
+      /* Animation delays for AOS */
+      [data-aos] {
+        pointer-events: none;
+      }
+
+      [data-aos].aos-animate {
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+  <body>
+        <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo">DD</div>
+          <div>
+            <h1>Dashing Diva Analytics</h1>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;">
+              Real-time review intelligence dashboard
+            </p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>Live</span>
+          </div>
+          <button class="btn btn-primary" onclick="refreshData()">
+            <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Error Display -->
+    <div id="error" class="error"></div>
+
+    <!-- Loading Display -->
+    <div id="loading" class="loading" style="display: none;">
+      <div class="loading-spinner"></div>
+      <span>Refreshing data...</span>
+    </div>
+
+    <!-- Main Dashboard -->
+    <main class="main-container">
+      <!-- Stats Overview -->
+      <section class="dashboard-grid">
+        <!-- Total Reviews -->
+        <div class="card stat-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="stat-change">+12%</div>
+          <div class="icon">
+            <i data-lucide="message-square" style="width: 24px; height: 24px;"></i>
+          </div>
+          <div class="stat-number">{{ stats.total_reviews }}</div>
+          <div class="stat-label">Total Reviews</div>
+        </div>
+
+        <!-- Average Rating -->
+        <div class="card stat-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="stat-change">+0.2</div>
+          <div class="icon">
+            <i data-lucide="star" style="width: 24px; height: 24px;"></i>
+          </div>
+          <div class="stat-number">{{ "%.1f" | format(stats.avg_rating) }}</div>
+          <div class="stat-label">Avg Rating</div>
+        </div>
+
+        <!-- Unique Products -->
+        <div class="card stat-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="stat-change">+3</div>
+          <div class="icon">
+            <i data-lucide="package" style="width: 24px; height: 24px;"></i>
+          </div>
+          <div class="stat-number">{{ stats.unique_products }}</div>
+          <div class="stat-label">Products</div>
+        </div>
+
+        <!-- Retailers -->
+        <div class="card stat-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="stat-change">+1</div>
+          <div class="icon">
+            <i data-lucide="store" style="width: 24px; height: 24px;"></i>
+          </div>
+          <div class="stat-number">{{ stats.retailers_count }}</div>
+          <div class="stat-label">Retailers</div>
+        </div>
+
+        <!-- Rating Distribution Chart -->
+        <div class="card chart-card medium" data-aos="fade-up" data-aos-delay="500">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Rating Distribution</h3>
+              <p class="chart-subtitle">Customer satisfaction breakdown</p>
+            </div>
+            <div class="chart-actions">
+              <button class="chart-btn active" data-period="all">All</button>
+              <button class="chart-btn" data-period="7d">7D</button>
+              <button class="chart-btn" data-period="30d">30D</button>
+            </div>
+          </div>
+          <div class="chart-container short">
+            <div id="ratingChart"></div>
+          </div>
+        </div>
+
+        <!-- Retailer Performance -->
+        <div class="card chart-card medium" data-aos="fade-up" data-aos-delay="600">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Retailer Performance</h3>
+              <p class="chart-subtitle">Market share by review volume</p>
+            </div>
+          </div>
+          <div class="chart-container short">
+            <div id="retailerChart"></div>
+          </div>
+        </div>
+
+        <!-- Review Trends -->
+        <div class="card chart-card large" data-aos="fade-up" data-aos-delay="700">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Review Trends</h3>
+              <p class="chart-subtitle">Daily review volume and sentiment over time</p>
+            </div>
+            <div class="chart-actions">
+              <button class="chart-btn active" data-view="volume">Volume</button>
+              <button class="chart-btn" data-view="sentiment">Sentiment</button>
+              <button class="chart-btn" data-view="combined">Combined</button>
+            </div>
+          </div>
+          <div class="chart-container tall">
+            <div id="trendChart"></div>
+          </div>
+        </div>
+
+        <!-- Product Performance -->
+        <div class="card chart-card small" data-aos="fade-up" data-aos-delay="800">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Top Products</h3>
+              <p class="chart-subtitle">Most reviewed items</p>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div id="productChart"></div>
+          </div>
+        </div>
+
+        <!-- Recent Reviews -->
+        <div class="card reviews-section" data-aos="fade-up" data-aos-delay="900">
+          <div class="reviews-header">
+            <div>
+              <h3 class="chart-title">Recent Reviews</h3>
+              <p class="chart-subtitle">Latest customer feedback</p>
+            </div>
+            <button class="btn btn-secondary">
+              <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+              View All
+            </button>
+          </div>
+          
+          <div class="reviews-grid">
+            {% for review in recent_reviews[:6] %}
+            <div class="review-card">
+              <div class="review-header">
+                <div class="review-product">{{ review.product_name[:50] }}{% if review.product_name|length > 50 %}...{% endif %}</div>
+                <div class="review-rating">
+                  {% for i in range(review.rating|int) %}
+                  <i data-lucide="star" style="width: 12px; height: 12px; fill: currentColor;"></i>
+                  {% endfor %}
+                  {{ review.rating }}
+                </div>
+              </div>
+              <div class="review-text">
+                {% if review.review_title %}{{ review.review_title }} - {% endif %}
+                {{ review.review_text }}
+              </div>
+              <div class="review-meta">
+                <div>
+                  <span class="retailer-badge">{{ review.retailer }}</span>
+                </div>
+                <div>
+                  by {{ review.reviewer_name }} • {{ review.review_date }}
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="review-card" style="grid-column: span 3; text-align: center; padding: 3rem;">
+              <i data-lucide="inbox" style="width: 48px; height: 48px; margin: 0 auto 1rem; color: var(--text-secondary);"></i>
+              <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem;">No reviews yet</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                Run the scraper to start collecting review data
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </main>
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .charts-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .chart-card {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🛍️ Dashing Diva Review Dashboard</h1>
+      <p>Real-time monitoring of customer reviews across major retailers</p>
+    </div>
+
+    <div class="container">
+      <button class="refresh-btn" onclick="refreshData()">
+        🔄 Refresh Data
+      </button>
+
+      <div id="loading" class="loading" style="display: none">
+        Loading dashboard data...
+      </div>
+
+      <div id="error" class="error" style="display: none"></div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="total-reviews">
+            {{ stats.overview.total_reviews }}
+          </div>
+          <div class="stat-label">Total Reviews</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="recent-reviews">
+            {{ stats.overview.recent_reviews_24h }}
+          </div>
+          <div class="stat-label">Last 24 Hours</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="active-retailers">
+            {{ stats.overview.active_retailers }}
+          </div>
+          <div class="stat-label">Active Retailers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="avg-rating">
+            {% set total_weighted = namespace(value=0) %} {% set total_count =
+            namespace(value=0) %} {% for rating, count in
+            stats.by_rating.items() %} {% set total_weighted.value =
+            total_weighted.value + (rating | float * count) %} {% set
+            total_count.value = total_count.value + count %} {% endfor %} {{
+            "%.1f" | format(total_weighted.value / total_count.value if
+            total_count.value > 0 else 0) }}
+          </div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="filter" style="width: 20px; height: 20px;"></i>
+          Filter Reviews
+        </h3>
+        
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label class="filter-label">Search</label>
+            <input type="text" id="searchInput" class="filter-input" placeholder="Search reviews, products, or authors...">
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Retailer</label>
+            <select id="retailerFilter" class="filter-select">
+              <option value="">All Retailers</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Product</label>
+            <select id="productFilter" class="filter-select">
+              <option value="">All Products</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Rating</label>
+            <select id="ratingFilter" class="filter-select">
+              <option value="">All Ratings</option>
+              <option value="5">5 Stars</option>
+              <option value="4">4 Stars</option>
+              <option value="3">3 Stars</option>
+              <option value="2">2 Stars</option>
+              <option value="1">1 Star</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Date From</label>
+            <input type="date" id="dateFromFilter" class="filter-input">
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Date To</label>
+            <input type="date" id="dateToFilter" class="filter-input">
+          </div>
+        </div>
+        
+        <div class="filter-buttons">
+          <button type="button" class="filter-btn secondary" onclick="clearFilters()">
+            Clear Filters
+          </button>
+          <button type="button" class="filter-btn primary" onclick="applyFilters()">
+            Apply Filters
+          </button>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3 class="chart-title">📊 Reviews by Retailer</h3>
+          <canvas id="retailerChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3 class="chart-title">⭐ Rating Distribution</h3>
+          <canvas id="ratingChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+
+      {% if stats.charts.daily_reviews.labels %}
+      <div class="chart-card" style="margin-bottom: 2rem">
+        <h3 class="chart-title">📈 Daily Review Trends (Last 30 Days)</h3>
+        <canvas id="trendChart" width="800" height="300"></canvas>
+      </div>
+      {% endif %}
+
+      <div class="recent-reviews">
+        <h3>📝 Recent Reviews</h3>
+        {% for review in stats.recent_reviews[:10] %}
+        <div class="review-item">
+          <div class="review-header">
+            <span class="review-product"
+              >{{ review.product_name[:50] }}{% if review.product_name|length >
+              50 %}...{% endif %}</span
+            >
+            <span class="review-rating">⭐ {{ review.rating }}/5</span>
+          </div>
+          <div class="review-text">
+            {% if review.review_title %}{{ review.review_title }} - {% endif %}
+            {{ review.review_text[:100] }}{% if review.review_text|length > 100
+            %}...{% endif %}
+          </div>
+          <div style="margin-top: 0.5rem">
+            <span class="retailer-badge">{{ review.retailer }}</span>
+            <span style="color: #718096; font-size: 0.8rem; margin-left: 1rem">
+              by {{ review.reviewer_name }} on {{ review.review_date }}
+            </span>
+          </div>
+        </div>
+        {% else %}
+        <div class="review-item">
+          <p style="color: #718096; text-align: center">
+            No reviews available yet. Run the scraper to collect data!
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Reviews Table Section -->
+      <div class="reviews-section">
+        <div class="reviews-header">
+          <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="table" style="width: 20px; height: 20px;"></i>
+            All Reviews
+            <span id="reviewCount" style="color: var(--text-secondary); font-weight: normal; font-size: 0.9em;"></span>
+          </h3>
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <select id="sortBy" class="filter-select" style="width: auto;">
+              <option value="review_date">Sort by Date</option>
+              <option value="rating">Sort by Rating</option>
+              <option value="retailer">Sort by Retailer</option>
+              <option value="product_name">Sort by Product</option>
+            </select>
+            <select id="sortOrder" class="filter-select" style="width: auto;">
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="reviewsTableContainer">
+          <table class="reviews-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Retailer</th>
+                <th>Product</th>
+                <th>Rating</th>
+                <th>Reviewer</th>
+                <th>Review</th>
+              </tr>
+            </thead>
+            <tbody id="reviewsTableBody">
+              <!-- Reviews will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button id="prevPage" onclick="changePage(-1)">Previous</button>
+          <span class="page-info" id="pageInfo">Page 1 of 1</span>
+          <button id="nextPage" onclick="changePage(1)">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Initialize AOS (Animate On Scroll)
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true,
+        offset: 50
+      });
+
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Performance optimized chart configurations
+      const chartColors = {
+        primary: ['#667eea', '#764ba2'],
+        gradient: ['#4facfe', '#00f2fe'],
+        accent: ['#f093fb', '#f5576c'],
+        success: ['#43e97b', '#38f9d7'],
+        ratings: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#16a34a']
+      };
+
+      // Chart instances for cleanup
+      let charts = {};
+
+      // Debounced resize handler
+      let resizeTimeout;
+      function handleResize() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          Object.values(charts).forEach(chart => {
+            if (chart && chart.resize) {
+              chart.resize();
+            }
+          });
+        }, 150);
+      }
+      window.addEventListener('resize', handleResize);
+
+      // Rating Distribution Chart (Radial Bar)
+      function initRatingChart() {
+        const chartData = [
+          {{ stats.by_rating.get('1.0', 0) }},
+          {{ stats.by_rating.get('2.0', 0) }},
+          {{ stats.by_rating.get('3.0', 0) }},
+          {{ stats.by_rating.get('4.0', 0) }},
+          {{ stats.by_rating.get('5.0', 0) }}
+        ];
+
+        const options = {
+          series: chartData,
+          chart: {
+            type: 'radialBar',
+            height: '100%',
+            background: 'transparent',
+            animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 800
+            }
+          },
+          plotOptions: {
+            radialBar: {
+              offsetY: 0,
+              startAngle: 0,
+              endAngle: 270,
+              hollow: {
+                margin: 5,
+                size: '30%',
+                background: 'transparent'
+              },
+              dataLabels: {
+                name: {
+                  show: false
+                },
+                value: {
+                  show: false
+                }
+              },
+              track: {
+                background: 'rgba(255,255,255,0.1)',
+                strokeWidth: '67%',
+                margin: 0
+              }
+            }
+          },
+          colors: chartColors.ratings,
+          labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+          legend: {
+            show: true,
+            floating: true,
+            fontSize: '12px',
+            position: 'left',
+            offsetX: 10,
+            offsetY: 15,
+            labels: {
+              useSeriesColors: true,
+              colors: '#b4bcd0'
+            },
+            formatter: function(seriesName, opts) {
+              return seriesName + ': ' + opts.w.globals.series[opts.seriesIndex];
+            }
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              legend: {
+                show: false
+              }
+            }
+          }],
+          theme: {
+            mode: 'dark'
+          }
+        };
+
+        if (charts.ratingChart) {
+          charts.ratingChart.destroy();
+        }
+        charts.ratingChart = new ApexCharts(document.querySelector("#ratingChart"), options);
+        charts.ratingChart.render();
+      }
+
+      // Retailer Performance Chart (Donut with gradients)
+      function initRetailerChart() {
+        const labels = {{ stats.by_retailer.keys() | list | tojson }};
+        const data = {{ stats.by_retailer.values() | list | tojson }};
+
+        const options = {
+          series: data,
+          chart: {
+            type: 'donut',
+            height: '100%',
+            background: 'transparent',
+            animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 800
+            }
+          },
+          labels: labels,
+          colors: chartColors.primary.concat(chartColors.accent),
+          plotOptions: {
+            pie: {
+              donut: {
+                size: '70%',
+                labels: {
+                  show: true,
+                  name: {
+                    show: true,
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: '#ffffff'
+                  },
+                  value: {
+                    show: true,
+                    fontSize: '20px',
+                    fontWeight: 700,
+                    color: '#667eea'
+                  },
+                  total: {
+                    show: true,
+                    showAlways: false,
+                    label: 'Total',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: '#b4bcd0'
+                  }
+                }
+              }
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          legend: {
+            position: 'bottom',
+            fontSize: '12px',
+            labels: {
+              colors: '#b4bcd0'
+            }
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }],
+          theme: {
+            mode: 'dark'
+          }
+        };
+
+        if (charts.retailerChart) {
+          charts.retailerChart.destroy();
+        }
+        charts.retailerChart = new ApexCharts(document.querySelector("#retailerChart"), options);
+        charts.retailerChart.render();
+      }
+
+      // Review Trends Chart (Advanced Area/Line)
+      function initTrendChart() {
+        {% if stats.charts.daily_reviews.labels %}
+        const trendData = {
+          labels: {{ stats.charts.daily_reviews.labels | tojson }},
+          values: {{ stats.charts.daily_reviews.data | tojson }}
+        };
+
+        const options = {
+          series: [{
+            name: 'Daily Reviews',
+            data: trendData.values.map((value, index) => ({
+              x: trendData.labels[index],
+              y: value
+            }))
+          }],
+          chart: {
+            type: 'area',
+            height: '100%',
+            background: 'transparent',
+            zoom: {
+              enabled: true,
+              type: 'x',
+              autoScaleYaxis: true
+            },
+            toolbar: {
+              show: true,
+              tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true
+              }
+            },
+            animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 800
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            curve: 'smooth',
+            width: 3,
+            colors: ['#667eea']
+          },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shadeIntensity: 1,
+              opacityFrom: 0.7,
+              opacityTo: 0.1,
+              stops: [0, 90, 100],
+              colorStops: [{
+                offset: 0,
+                color: '#667eea',
+                opacity: 0.7
+              }, {
+                offset: 100,
+                color: '#764ba2',
+                opacity: 0.1
+              }]
+            }
+          },
+          xaxis: {
+            type: 'datetime',
+            labels: {
+              style: {
+                colors: '#b4bcd0'
+              }
+            },
+            axisBorder: {
+              color: '#333'
+            },
+            axisTicks: {
+              color: '#333'
+            }
+          },
+          yaxis: {
+            title: {
+              text: 'Number of Reviews',
+              style: {
+                color: '#b4bcd0'
+              }
+            },
+            labels: {
+              style: {
+                colors: '#b4bcd0'
+              }
+            }
+          },
+          grid: {
+            borderColor: '#333',
+            strokeDashArray: 3
+          },
+          tooltip: {
+            theme: 'dark',
+            x: {
+              format: 'dd MMM yyyy'
+            }
+          },
+          theme: {
+            mode: 'dark'
+          }
+        };
+
+        if (charts.trendChart) {
+          charts.trendChart.destroy();
+        }
+        charts.trendChart = new ApexCharts(document.querySelector("#trendChart"), options);
+        charts.trendChart.render();
+        {% endif %}
+      }
+
+      // Product Performance Chart (Horizontal Bar)
+      function initProductChart() {
+        // Mock data for top products (replace with real data)
+        const productData = [
+          { name: 'Nail Kit Pro', reviews: 45 },
+          { name: 'Gloss Finish', reviews: 38 },
+          { name: 'Classic Set', reviews: 32 },
+          { name: 'French Tips', reviews: 28 },
+          { name: 'Color Collection', reviews: 24 }
+        ];
+
+        const options = {
+          series: [{
+            name: 'Reviews',
+            data: productData.map(item => item.reviews)
+          }],
+          chart: {
+            type: 'bar',
+            height: '100%',
+            background: 'transparent',
+            animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 800
+            }
+          },
+          plotOptions: {
+            bar: {
+              borderRadius: 6,
+              horizontal: true,
+              barHeight: '70%',
+              colors: {
+                backgroundBarColors: ['rgba(255,255,255,0.1)'],
+                backgroundBarRadius: 6
+              }
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            style: {
+              colors: ['#ffffff']
+            }
+          },
+          xaxis: {
+            categories: productData.map(item => item.name),
+            labels: {
+              style: {
+                colors: '#b4bcd0'
+              }
+            }
+          },
+          yaxis: {
+            labels: {
+              style: {
+                colors: '#b4bcd0'
+              }
+            }
+          },
+          colors: ['#667eea'],
+          grid: {
+            borderColor: '#333'
+          },
+          tooltip: {
+            theme: 'dark'
+          },
+          theme: {
+            mode: 'dark'
+          }
+        };
+
+        if (charts.productChart) {
+          charts.productChart.destroy();
+        }
+        charts.productChart = new ApexCharts(document.querySelector("#productChart"), options);
+        charts.productChart.render();
+      }
+
+      // Initialize all charts
+      function initCharts() {
+        // Use requestAnimationFrame for smooth initialization
+        requestAnimationFrame(() => {
+          initRatingChart();
+          initRetailerChart();
+          initTrendChart();
+          initProductChart();
+        });
+      }
+
+      // Refresh functionality with loading states
+      async function refreshData() {
+        const loadingEl = document.getElementById('loading');
+        const errorEl = document.getElementById('error');
+        const refreshBtn = document.querySelector('.header-actions .btn-primary');
+
+        // Update UI state
+        loadingEl.style.display = 'flex';
+        errorEl.style.display = 'none';
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = '<div class="loading-spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>Refreshing...';
+
+        try {
+          const response = await fetch('/api/stats', {
+            method: 'GET',
+            headers: {
+              'Cache-Control': 'no-cache'
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          // Add a small delay for smooth UX
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+
+        } catch (error) {
+          console.error('Error refreshing data:', error);
+          errorEl.textContent = `⚠️ Error refreshing data: ${error.message}`;
+          errorEl.style.display = 'block';
+          
+          // Reset button state
+          refreshBtn.disabled = false;
+          refreshBtn.innerHTML = '<i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>Refresh';
+          lucide.createIcons();
+        } finally {
+          loadingEl.style.display = 'none';
+        }
+      }
+
+      // Chart period filter functionality
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('chart-btn')) {
+          const parent = e.target.closest('.chart-actions');
+          parent.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
+          e.target.classList.add('active');
+          
+          // Add your period filtering logic here
+          const period = e.target.dataset.period;
+          const view = e.target.dataset.view;
+          
+          if (period) {
+            console.log('Filter by period:', period);
+            // Implement period filtering
+          }
+          
+          if (view) {
+            console.log('Change view:', view);
+            // Implement view switching
+          }
+        }
+      });
+
+      // Auto-refresh with exponential backoff
+      let refreshInterval = 5 * 60 * 1000; // 5 minutes
+      let autoRefreshTimer;
+
+      function scheduleAutoRefresh() {
+        clearTimeout(autoRefreshTimer);
+        autoRefreshTimer = setTimeout(async () => {
+          try {
+            await refreshData();
+            refreshInterval = 5 * 60 * 1000; // Reset to 5 minutes on success
+          } catch (error) {
+            refreshInterval = Math.min(refreshInterval * 1.5, 30 * 60 * 1000); // Max 30 minutes
+          }
+          scheduleAutoRefresh();
+        }, refreshInterval);
+      }
+
+      // Initialize everything when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize charts after a short delay to ensure DOM is fully rendered
+        setTimeout(initCharts, 100);
+        
+        // Start auto-refresh
+        scheduleAutoRefresh();
+        
+        // Add intersection observer for performance
+        if ('IntersectionObserver' in window) {
+          const chartObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                // Chart is visible, ensure it's rendered
+                const chartId = entry.target.id;
+                if (charts[chartId] && charts[chartId].render) {
+                  charts[chartId].render();
+                }
+              }
+            });
+          });
+
+          // Observe all chart containers
+          document.querySelectorAll('[id$="Chart"]').forEach(chart => {
+            chartObserver.observe(chart);
+          });
+        }
+
+        // Service Worker for offline support (optional)
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('Service Worker registration failed:', err);
+          });
+        }
+      });
+
+      // Filtering and Pagination
+      let currentPage = 1;
+      let currentFilters = {};
+      let currentSort = { by: 'review_date', order: 'desc' };
+
+      // Load filter options
+      async function loadFilterOptions() {
+        try {
+          const response = await fetch('/api/filters');
+          const data = await response.json();
+          
+          // Populate retailer filter
+          const retailerSelect = document.getElementById('retailerFilter');
+          retailerSelect.innerHTML = '<option value="">All Retailers</option>';
+          data.retailers.forEach(retailer => {
+            const option = document.createElement('option');
+            option.value = retailer;
+            option.textContent = retailer.charAt(0).toUpperCase() + retailer.slice(1);
+            retailerSelect.appendChild(option);
+          });
+          
+          // Populate product filter
+          const productSelect = document.getElementById('productFilter');
+          productSelect.innerHTML = '<option value="">All Products</option>';
+          data.products.forEach(product => {
+            const option = document.createElement('option');
+            option.value = product;
+            option.textContent = product.length > 50 ? product.substring(0, 50) + '...' : product;
+            productSelect.appendChild(option);
+          });
+          
+        } catch (error) {
+          console.error('Error loading filter options:', error);
+        }
+      }
+
+      // Load reviews with filters
+      async function loadReviews() {
+        try {
+          const params = new URLSearchParams({
+            page: currentPage,
+            limit: 20,
+            sort_by: currentSort.by,
+            sort_order: currentSort.order,
+            ...currentFilters
+          });
+
+          const response = await fetch(`/api/reviews?${params}`);
+          const data = await response.json();
+          
+          displayReviews(data.reviews);
+          updatePagination(data.pagination);
+          updateReviewCount(data.pagination.total);
+          
+        } catch (error) {
+          console.error('Error loading reviews:', error);
+          document.getElementById('reviewsTableBody').innerHTML = 
+            '<tr><td colspan="6" style="text-align: center; color: var(--text-secondary);">Error loading reviews</td></tr>';
+        }
+      }
+
+      // Display reviews in table
+      function displayReviews(reviews) {
+        const tbody = document.getElementById('reviewsTableBody');
+        
+        if (reviews.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-secondary);">No reviews found</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = reviews.map(review => {
+          const ratingClass = review.rating >= 4 ? 'excellent' : 
+                            review.rating >= 3 ? 'good' : 
+                            review.rating >= 2 ? 'average' : 'poor';
+          
+          const retailerClass = review.retailer.toLowerCase();
+          
+          return `
+            <tr>
+              <td>${new Date(review.review_date).toLocaleDateString()}</td>
+              <td><span class="retailer-badge ${retailerClass}">${review.retailer}</span></td>
+              <td>
+                <div class="review-text" title="${review.product_name}">${review.product_name}</div>
+              </td>
+              <td><span class="rating-badge ${ratingClass}">⭐ ${review.rating}</span></td>
+              <td>${review.reviewer_name || 'Anonymous'}</td>
+              <td>
+                <div class="review-text" title="${review.review_text}">
+                  ${review.review_title ? review.review_title + ' - ' : ''}${review.review_text}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Update pagination controls
+      function updatePagination(pagination) {
+        document.getElementById('pageInfo').textContent = 
+          `Page ${pagination.page} of ${pagination.pages}`;
+        document.getElementById('prevPage').disabled = pagination.page <= 1;
+        document.getElementById('nextPage').disabled = pagination.page >= pagination.pages;
+      }
+
+      // Update review count
+      function updateReviewCount(total) {
+        document.getElementById('reviewCount').textContent = `(${total} reviews)`;
+      }
+
+      // Change page
+      function changePage(delta) {
+        const pagination = { 
+          page: currentPage, 
+          pages: parseInt(document.getElementById('pageInfo').textContent.match(/of (\d+)/)[1]) 
+        };
+        
+        const newPage = currentPage + delta;
+        if (newPage >= 1 && newPage <= pagination.pages) {
+          currentPage = newPage;
+          loadReviews();
+        }
+      }
+
+      // Apply filters
+      function applyFilters() {
+        currentFilters = {};
+        
+        const search = document.getElementById('searchInput').value.trim();
+        if (search) currentFilters.search = search;
+        
+        const retailer = document.getElementById('retailerFilter').value;
+        if (retailer) currentFilters.retailer = retailer;
+        
+        const product = document.getElementById('productFilter').value;
+        if (product) currentFilters.product = product;
+        
+        const rating = document.getElementById('ratingFilter').value;
+        if (rating) currentFilters.rating = rating;
+        
+        const dateFrom = document.getElementById('dateFromFilter').value;
+        if (dateFrom) currentFilters.date_from = dateFrom;
+        
+        const dateTo = document.getElementById('dateToFilter').value;
+        if (dateTo) currentFilters.date_to = dateTo;
+        
+        currentPage = 1;
+        loadReviews();
+      }
+
+      // Clear filters
+      function clearFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('retailerFilter').value = '';
+        document.getElementById('productFilter').value = '';
+        document.getElementById('ratingFilter').value = '';
+        document.getElementById('dateFromFilter').value = '';
+        document.getElementById('dateToFilter').value = '';
+        
+        currentFilters = {};
+        currentPage = 1;
+        loadReviews();
+      }
+
+      // Sort change handlers
+      document.getElementById('sortBy').addEventListener('change', function() {
+        currentSort.by = this.value;
+        loadReviews();
+      });
+
+      document.getElementById('sortOrder').addEventListener('change', function() {
+        currentSort.order = this.value;
+        loadReviews();
+      });
+
+      // Search on Enter key
+      document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          applyFilters();
+        }
+      });
+
+      // Initialize filters and reviews
+      loadFilterOptions();
+      loadReviews();
+
+      // Cleanup on page unload
+      window.addEventListener('beforeunload', function() {
+        Object.values(charts).forEach(chart => {
+          if (chart && chart.destroy) {
+            chart.destroy();
+          }
+        });
+        clearTimeout(autoRefreshTimer);
+      });
+    </script>
+  </body>
+</html>
